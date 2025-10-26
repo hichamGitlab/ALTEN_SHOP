@@ -1,0 +1,67 @@
+<h1 class="text-center">Liste des produits</h1>
+
+<p-button label="Créer produit" (onClick)="onCreate()" class="block text-center" />
+
+<p-dataView #dv [value]="products()">
+    <ng-template pTemplate="list" let-products>
+        @for (product of products; track product) {
+        <p-card class="block mb-2">
+            <div class="flex gap-2 items-center">
+                <div class="w-16 h-16 flex-shrink-0 p-0.5">
+                    <img [src]="product.image ? 'assets/' + product.image : 'assets/no-image.svg'"
+                        alt="{{ product.name }} " class="w-full h-full object-cover rounded shadow-sm"
+                        (error)="onImgError($event)" />
+                </div>
+                <div class="flex-1">
+                    <div class="border-1 border-round-lg surface-ground p-3">
+                        <!-- Première ligne -->
+                        <div class="mb-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-base px-5 font-medium text-900">{{ product.name }}</span>
+                                <span class="text-lg font-semibold text-900">{{ product.price | formatPrice }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Deuxième ligne -->
+                        <div>
+                            <div class="flex justify-between items-center">
+                                <span class="px-5"
+                                    [style.backgroundColor]="product.inventoryStatus === 'INSTOCK' ? '#ECFDF5' : (product.inventoryStatus === 'LOWSTOCK' ? '#FFF7ED' : (product.inventoryStatus === 'OUTOFSTOCK' ? '#FEE2E2' : 'transparent'))"
+                                    [style.color]="product.inventoryStatus === 'INSTOCK' ? '#065F46' : (product.inventoryStatus === 'LOWSTOCK' ? '#92400E' : (product.inventoryStatus === 'OUTOFSTOCK' ? '#7F1D1D' : '#374151'))"
+                                    style=" border-radius:9999px; font-weight:600; font-size:0.9rem; display:inline-block;">
+                                    {{ product.inventoryStatus === 'INSTOCK' ? 'EN STOCK' : (product.inventoryStatus ===
+                                    'LOWSTOCK' ? 'STOCK BAS' : (product.inventoryStatus === 'OUTOFSTOCK' ? 'RUPTURE' :
+                                    product.inventoryStatus)) }}
+                                </span>
+                                @if (product.rating !== undefined && product.rating !== null) {
+                                <span class="text-sm text-600">Rating: {{ product.rating }}/5</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ng-template pTemplate="footer">
+                <div class="flex gap-3 -mt-2 justify-content-center">
+                    <p-button label="Modifier" severity="secondary" (onClick)="onUpdate(product)"
+                        [style]="{'height': '2rem'}" />
+                    <p-button label="Supprimer" severity="danger" (onClick)="onDelete(product)"
+                        [style]="{'height': '2rem'}" />
+                    @if (!isInCart(product.id)) {
+                    <p-button label="Ajouter au panier" severity="success" (onClick)="onAddToCart(product)"
+                        [style]="{'height': '2rem'}" />
+                    } @else {
+                    <p-button label="Retirer du panier" severity="warning" (onClick)="onRemoveFromCart(product.id)"
+                        [style]="{'height': '2rem'}" />
+                    }
+                </div>
+            </ng-template>
+        </p-card>
+        }
+    </ng-template>
+</p-dataView>
+
+<p-dialog [(visible)]="isDialogVisible" [style]="{ width: '50vw' }" header="Ajout/Edition produit">
+    <app-product-form [product]="editedProduct()" (save)="onSave($event)" (cancel)="onCancel()" />
+</p-dialog>
