@@ -15,32 +15,43 @@ export class CartService {
 
     addToCart(product: Product) {
         this._cart.update(cart => {
-            const existingItem = cart.items.find(item => item.productId === product.id);
-            if (existingItem) {
-                existingItem.quantity++;
+            const items = [...cart.items];
+            const index = items.findIndex(item => item.productId === product.id);
+            if (index > -1) {
+                const updated = { ...items[index], quantity: items[index].quantity + 1 };
+                items[index] = updated;
             } else {
-                cart.items.push({ productId: product.id, quantity: 1 });
+                items.push({
+                    productId: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    quantity: 1
+                });
             }
-            cart.total = this.calculateTotal(cart.items, product.price);
-            return cart;
+            const total = this.calculateTotal(items);
+            return { ...cart, items, total };
         });
     }
 
     removeFromCart(productId: number) {
         this._cart.update(cart => {
-            const itemIndex = cart.items.findIndex(item => item.productId === productId);
+            let items = cart.items.map(i => ({ ...i }));
+            const itemIndex = items.findIndex(item => item.productId === productId);
             if (itemIndex > -1) {
-                if (cart.items[itemIndex].quantity > 1) {
-                    cart.items[itemIndex].quantity--;
+                const nextQty = items[itemIndex].quantity - 1;
+                if (nextQty > 0) {
+                    items[itemIndex] = { ...items[itemIndex], quantity: nextQty };
                 } else {
-                    cart.items.splice(itemIndex, 1);
+                    items = items.filter((_, idx) => idx !== itemIndex);
                 }
             }
-            return cart;
+            const total = this.calculateTotal(items);
+            return { ...cart, items, total };
         });
     }
 
-    private calculateTotal(items: CartItem[], price: number): number {
-        return items.reduce((total, item) => total + (item.quantity * price), 0);
+    private calculateTotal(items: CartItem[]): number {
+        return items.reduce((total, item) => total + (item.quantity * item.price), 0);
     }
 }

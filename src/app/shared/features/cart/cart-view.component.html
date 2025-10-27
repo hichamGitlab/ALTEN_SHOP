@@ -1,0 +1,48 @@
+<div class="cart-container">
+    @if (cart().items.length === 0) {
+    <div class="empty-cart">
+        <i class="pi pi-shopping-cart" style="font-size: 3rem; color: var(--text-color-secondary);"></i>
+        <p class="text-xl mt-3">Votre panier est vide</p>
+    </div>
+    } @else {
+    <div class="cart-header mb-4">
+        <h2>Mon Panier ({{ totalItems() }} article{{ totalItems() > 1 ? 's' : '' }})</h2>
+        <p-button label="Vider le panier" severity="danger" [outlined]="true" size="small" (onClick)="onClearCart()" />
+    </div>
+
+    <div class="cart-items">
+        @for (item of cart().items; track item.productId) {
+        <p-card class="cart-item mb-3">
+            <div class="flex gap-3 align-items-center">
+                <div class="product-image">
+                    <img [src]="item.image ? 'assets/' + item.image : 'assets/no-image.svg'" [alt]="item.name"
+                        (error)="onImgError($event)" />
+                </div>
+
+                <div class="product-details flex-1">
+                    <h3 class="product-name">{{ item.name }}</h3>
+                    <div class="product-price">{{ item.price | formatPrice }}</div>
+                    <div class="product-quantity">Quantité: {{ item.quantity }}</div>
+                </div>
+
+                <div class="item-actions">
+                    <div class="item-total mb-2">
+                        <strong>{{ (item.price * item.quantity) | formatPrice }}</strong>
+                    </div>
+                    <p-button icon="pi pi-trash" severity="danger" [outlined]="true" size="small"
+                        (onClick)="onRemoveItem(item.productId)" [pTooltip]="'Retirer du panier'" />
+                </div>
+            </div>
+        </p-card>
+        }
+    </div>
+
+    <div class="cart-footer mt-4 pt-4">
+        <div class="total-section">
+            <span class="total-label">Total:</span>
+            <span class="total-amount">{{ cart().total | formatPrice }}</span>
+        </div>
+        <p-button label="Commander" severity="success" size="large" class="w-full mt-3" icon="pi pi-check" />
+    </div>
+    }
+</div>

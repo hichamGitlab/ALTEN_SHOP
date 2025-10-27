@@ -1,8 +1,40 @@
 <h1 class="text-center">Liste des produits</h1>
 
-<p-button label="Créer produit" (onClick)="onCreate()" class="block text-center" />
+<div class="filters-section mb-4">
+    <div class="flex flex-wrap gap-3 align-items-center justify-content-between">
+        <div class="flex gap-3 flex-1">
+            <span class="p-input-icon-left flex-1" style="max-width: 400px;">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)"
+                    placeholder="Rechercher par nom, catégorie ou prix..." class="w-full" />
+            </span>
 
-<p-dataView #dv [value]="products()">
+            <p-dropdown [options]="categoryOptions()" [ngModel]="selectedCategory()"
+                (ngModelChange)="selectedCategory.set($event)" placeholder="Toutes les catégories" [showClear]="true"
+                styleClass="w-full" [style]="{'min-width': '200px'}">
+            </p-dropdown>
+
+            <p-dropdown [options]="statusOptions" [ngModel]="selectedStatus()"
+                (ngModelChange)="selectedStatus.set($event)" placeholder="Tous les statuts" [showClear]="true"
+                styleClass="w-full" [style]="{'min-width': '200px'}">
+            </p-dropdown>
+
+            <p-button icon="pi pi-filter-slash" label="Réinitialiser" severity="secondary" [outlined]="true"
+                (onClick)="resetFilters()">
+            </p-button>
+        </div>
+
+        <p-button label="Créer produit" icon="pi pi-plus" (onClick)="onCreate()" />
+    </div>
+
+    <div class="mt-3 text-sm text-color-secondary">
+        {{ totalRecords() }} produit(s) trouvé(s)
+    </div>
+</div>
+
+<p-dataView #dv [value]="filteredProducts()" [rows]="rowsPerPage()" [paginator]="true"
+    [first]="currentPage() * rowsPerPage()" (onPage)="onPageChange($event)" [rowsPerPageOptions]="[5, 10, 20, 50]">
+
     <ng-template pTemplate="list" let-products>
         @for (product of products; track product) {
         <p-card class="block mb-2">
