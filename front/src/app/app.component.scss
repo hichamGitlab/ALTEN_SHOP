@@ -1,0 +1,34 @@
+.app-content {
+    overflow: hidden;
+    height: 100%;
+}
+
+.cart-icon {
+    position: relative;
+    display: inline-block;
+
+    .pi {
+        font-size: 2rem;
+        line-height: 1;
+    }
+
+    .badge {
+        position: absolute;
+        top: -6px;
+        right: -10px;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 5px;
+        border-radius: 9999px;
+        background: #ef4444;
+        /* red-500 */
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 0 2px var(--surface-card, #fff);
+        /* ring to separate from bg */
+    }
+}

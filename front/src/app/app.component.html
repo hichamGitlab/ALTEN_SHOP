@@ -1,0 +1,37 @@
+<p-toolbar [style]="{ height: '100px' }">
+    <div class="p-toolbar-group-start">
+        <img src="assets/icons/icon-72x72.png" alt="logo" />
+    </div>
+    <div class="p-toolbar-group-center">
+        {{ title }}
+    </div>
+    <div class="p-toolbar-group-end">
+        <div class="cart-icon" (click)="openCart()" style="cursor: pointer;">
+            <i class="pi pi-shopping-cart"></i>
+            @if (totalItems() > 0) {
+            <span class="badge">{{ totalItems() }}</span>
+            }
+        </div>
+    </div>
+</p-toolbar>
+
+<p-toast position="top-right"></p-toast>
+
+<p-sidebar [(visible)]="cartVisible" position="right" [style]="{ width: '500px' }">
+    <ng-template pTemplate="header">
+        <span class="text-xl font-semibold">Mon Panier</span>
+    </ng-template>
+    <app-cart-view />
+</p-sidebar>
+<p-splitter [panelSizes]="[20, 80]" [style]="{ height: 'calc(100vh - 100px)' }">
+    <ng-template pTemplate>
+        <div class="w-full">
+            <app-panel-menu />
+        </div>
+    </ng-template>
+    <ng-template pTemplate>
+        <div class="w-full app-content">
+            <router-outlet></router-outlet>
+        </div>
+    </ng-template>
+</p-splitter>

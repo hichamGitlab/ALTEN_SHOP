@@ -1,0 +1,106 @@
+<div class="contact-container">
+    <div class="contact-header">
+        <h1>Contactez-nous</h1>
+        <p class="subtitle">Une question ? N'hésitez pas à nous contacter</p>
+    </div>
+
+    <div class="contact-content">
+        <p-card class="contact-card">
+            <ng-template pTemplate="header">
+                <div class="card-header">
+                    <i class="pi pi-envelope" style="font-size: 2rem;"></i>
+                    <h2>Formulaire de contact</h2>
+                </div>
+            </ng-template>
+
+            <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+
+                <div class="form-field">
+                    <label for="email">Email <span class="required">*</span></label>
+                    <input pInputText id="email" formControlName="email" type="email"
+                        placeholder="votre.email@exemple.com" class="w-full" />
+                    @if (email?.invalid && (email?.dirty || email?.touched)) {
+                    <small class="error-message">
+                        @if (email?.errors?.['required']) {
+                        L'email est obligatoire.
+                        }
+                        @if (email?.errors?.['email']) {
+                        Veuillez entrer une adresse email valide.
+                        }
+                    </small>
+                    }
+                </div>
+
+                <div class="form-field">
+                    <label for="message">Message <span class="required">*</span> (max 300 caractères)</label>
+                    <textarea pInputTextarea id="message" formControlName="message" placeholder="Votre message..."
+                        rows="6" class="w-full">
+                    </textarea>
+                    <div class="char-count">
+                        {{ messageLength }} / 300 caractères
+                    </div>
+                    @if (message?.invalid && (message?.dirty || message?.touched)) {
+                    <small class="error-message">
+                        @if (message?.errors?.['required']) {
+                        Le message est obligatoire.
+                        }
+                        @if (message?.errors?.['maxlength']) {
+                        Le message ne peut pas dépasser 300 caractères.
+                        }
+                    </small>
+                    }
+                </div>
+
+                <div class="form-actions">
+                    <p-button label="Envoyer" icon="pi pi-send" type="submit" [disabled]="!contactForm.valid"
+                        severity="primary" />
+                    <p-button label="Réinitialiser" icon="pi pi-refresh" type="button" (onClick)="resetForm()"
+                        severity="secondary" [outlined]="true" />
+                </div>
+            </form>
+        </p-card>
+
+        <div class="contact-info">
+            <p-card>
+                <ng-template pTemplate="header">
+                    <div class="card-header">
+                        <i class="pi pi-info-circle" style="font-size: 2rem;"></i>
+                        <h2>Informations</h2>
+                    </div>
+                </ng-template>
+
+                <div class="info-item">
+                    <i class="pi pi-map-marker"></i>
+                    <div>
+                        <h3>Adresse</h3>
+                        <p>123 Avenue de l'Innovation<br>75001 Paris, France</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <i class="pi pi-phone"></i>
+                    <div>
+                        <h3>Téléphone</h3>
+                        <p>+33 1 23 45 67 89</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <i class="pi pi-envelope"></i>
+                    <div>
+                        <h3>Email</h3>
+                        <p>contact&#64;alten-shop.fr</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <i class="pi pi-clock"></i>
+                    <div>
+                        <h3>Horaires</h3>
+                        <p>Lun - Ven: 9h00 - 18h00<br>Sam: 10h00 - 16h00</p>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+    </div>
+</div>
